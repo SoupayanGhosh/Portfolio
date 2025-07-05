@@ -9,9 +9,11 @@ import { useTheme } from "next-themes"
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const { theme, setTheme } = useTheme()
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => {
       if (window.scrollY > 10) {
         setIsScrolled(true)
@@ -19,7 +21,6 @@ export function Navbar() {
         setIsScrolled(false)
       }
     }
-
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
@@ -60,18 +61,21 @@ export function Navbar() {
           <Link href="#achievements" className="text-foreground/80 hover:text-primary transition-colors">
             Achievements
           </Link>
-          <Link href="#contact" className="text-foreground/80 hover:text-primary transition-colors">
-            Contact
+          <Link href="/projects" className="text-foreground/80 hover:text-primary transition-colors">
+            Projects
+          </Link>
+          <Link href="/contact" className="text-foreground/80 hover:text-primary transition-colors">
+            Contact Me
           </Link>
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
           </Button>
         </div>
 
         {/* Mobile Menu Button */}
         <div className="md:hidden flex items-center">
           <Button variant="ghost" size="icon" onClick={toggleTheme} className="mr-2">
-            {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            {mounted && (theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />)}
           </Button>
           <Button variant="ghost" size="icon" onClick={toggleMenu}>
             {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -119,11 +123,18 @@ export function Navbar() {
               Achievements
             </Link>
             <Link
-              href="#contact"
+              href="/projects"
               className="text-foreground/80 hover:text-primary transition-colors py-2"
               onClick={toggleMenu}
             >
-              Contact
+              Projects
+            </Link>
+            <Link
+              href="/contact"
+              className="text-foreground/80 hover:text-primary transition-colors py-2"
+              onClick={toggleMenu}
+            >
+              Contact Me
             </Link>
           </div>
         </div>

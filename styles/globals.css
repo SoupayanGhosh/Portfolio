@@ -4,6 +4,7 @@
 
 body {
   font-family: Arial, Helvetica, sans-serif;
+  font-size: 1.08rem; /* Slightly larger base font size for readability */
 }
 
 @layer utilities {
@@ -14,25 +15,26 @@ body {
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    /* Improved light mode palette for better contrast and vibrancy */
+    --background: 0 0% 100%; /* pure white */
+    --foreground: 0 0% 7%; /* almost black for better readability */
+    --card: 0 0% 98%; /* off-white for card separation */
+    --card-foreground: 0 0% 7%;
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
+    --popover-foreground: 0 0% 7%;
+    --primary: 210 100% 50%; /* blue-600 for accent/brand */
     --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
+    --secondary: 0 0% 94%; /* slightly darker gray for secondary */
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
+    --muted: 0 0% 94%; /* slightly darker gray for muted */
     --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 210 100% 96%; /* very light blue for accent backgrounds */
+    --accent-foreground: 210 100% 40%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
+    --border: 0 0% 85%; /* slightly darker border for separation */
     --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
+    --ring: 210 100% 50%;
     --chart-1: 12 76% 61%;
     --chart-2: 173 58% 39%;
     --chart-3: 197 37% 24%;
@@ -90,5 +92,203 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    background: linear-gradient(135deg, #38bdf8 0%, #22c55e 50%, #f59e42 100%);
+    background-attachment: fixed;
   }
+  html {
+    min-height: 100%;
+    /* Animated gradient background */
+    background: linear-gradient(
+      270deg,
+      #38bdf8,
+      #22c55e,
+      #f59e42,
+      #3b82f6,
+      #39ff14,
+      #38bdf8
+    );
+    background-size: 400% 400%;
+    animation: gradientMove 30s ease-in-out infinite;
+    position: relative;
+  }
+  @keyframes gradientMove {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+  html::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="100%25" height="100%25" fill="none"/><g stroke="%2338bdf8" stroke-width="0.5" opacity="0.08"><path d="M0 0L1000 1000"/><path d="M1000 0L0 1000"/><path d="M500 0L500 1000"/><path d="M0 500L1000 500"/></g></svg>');
+    background-repeat: repeat;
+    background-size: cover;
+    mix-blend-mode: lighten;
+    animation: bgmove 30s linear infinite alternate;
+  }
+  html::after {
+    /* Floating particles */
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><circle cx="10" cy="10" r="2" fill="%2338bdf8" opacity="0.5"/><circle cx="80" cy="40" r="1.5" fill="%2322c55e" opacity="0.5"/><circle cx="50" cy="90" r="2.5" fill="%23f59e42" opacity="0.5"/><circle cx="90" cy="70" r="1.2" fill="%233b82f6" opacity="0.5"/><circle cx="30" cy="60" r="1.8" fill="%2339ff14" opacity="0.5"/></svg>');
+    background-repeat: repeat;
+    background-size: 200px 200px;
+    animation: particlesMove 40s linear infinite;
+    mix-blend-mode: lighten;
+  }
+  @keyframes particlesMove {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 200px 200px;
+    }
+  }
+  body,
+  #__next,
+  .container,
+  main {
+    position: relative;
+    z-index: 2;
+  }
+  /* Glassmorphism for cards/sections */
+  .glass,
+  .card,
+  .section-bg {
+    background: rgba(255, 255, 255, 0.18);
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+  }
+  .dark .glass,
+  .dark .card,
+  .dark .section-bg {
+    background: rgba(15, 23, 42, 0.28);
+    box-shadow: 0 8px 32px 0 rgba(57, 255, 20, 0.1);
+    border: 1px solid rgba(57, 255, 20, 0.18);
+  }
+  @keyframes bgmove {
+    0% {
+      background-position: 0 0;
+    }
+    100% {
+      background-position: 100px 100px;
+    }
+  }
+  .dark body {
+    background: linear-gradient(135deg, #0f172a 0%, #39ff14 50%, #3b82f6 100%);
+    background-attachment: fixed;
+  }
+  .dark body::before {
+    background: url('data:image/svg+xml;utf8,<svg width="100%25" height="100%25" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="100%25" height="100%25" fill="none"/><g stroke="%2339ff14" stroke-width="0.5" opacity="0.10"><path d="M0 0L1000 1000"/><path d="M1000 0L0 1000"/><path d="M500 0L500 1000"/><path d="M0 500L1000 500"/></g></svg>');
+    background-repeat: repeat;
+    background-size: cover;
+    mix-blend-mode: lighten;
+    animation: bgmove 30s linear infinite alternate;
+  }
+}
+
+/* Ripple effect for buttons */
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  animation: ripple 600ms linear;
+  background: rgba(59, 130, 246, 0.3); /* Tailwind primary/blue-500 @ 30% */
+  pointer-events: none;
+  z-index: 10;
+}
+@keyframes ripple {
+  to {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Button, link, and focus states for accessibility */
+button,
+[type="button"],
+[type="submit"],
+a {
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid hsl(var(--primary));
+  outline-offset: 2px;
+  box-shadow: 0 0 0 2px hsl(var(--primary) / 0.2);
+}
+button:hover,
+a:hover {
+  filter: brightness(0.97);
+  text-decoration: underline;
+}
+button:active,
+a:active {
+  filter: brightness(0.93);
+}
+
+/* Disabled and destructive states */
+button:disabled,
+[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+button.destructive,
+.destructive {
+  background: hsl(var(--destructive));
+  color: hsl(var(--destructive-foreground));
+}
+button.destructive:hover,
+.destructive:hover {
+  background: hsl(var(--destructive) / 0.9);
+}
+
+/* Card shadow and border radius for depth and consistency */
+.card,
+.bg-card,
+.shadow-card {
+  box-shadow: 0 2px 12px 0 rgba(31, 38, 135, 0.07);
+  border-radius: var(--radius);
+}
+
+/* Section separation: subtle background and divider utility */
+.section-bg {
+  background: hsl(var(--muted));
+}
+.section-divider {
+  border-bottom: 1px solid hsl(var(--border));
+  margin: 2rem 0;
+}
+
+/* Scrollbar styling for polish */
+::-webkit-scrollbar {
+  width: 10px;
+  background: hsl(var(--muted));
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary) / 0.2);
 }

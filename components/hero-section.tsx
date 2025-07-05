@@ -1,13 +1,39 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { motion } from "framer-motion"
+import { motion, useViewportScroll, useTransform } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { ArrowDown, Mail, Phone, Github, Linkedin } from "lucide-react"
 import Link from "next/link"
 
+// Custom hook for typewriter effect
+function useTypewriter(text: string, speed = 70) {
+  const [displayed, setDisplayed] = useState("")
+  useEffect(() => {
+    let i = 0
+    setDisplayed("")
+    const interval = setInterval(() => {
+      if (i < text.length) {
+        setDisplayed(text.slice(0, i + 1))
+        i++
+      } else {
+        clearInterval(interval)
+      }
+    }, speed)
+    return () => clearInterval(interval)
+  }, [text, speed])
+  return displayed
+}
+
 export function HeroSection() {
   const [isMounted, setIsMounted] = useState(false)
+  const typewriterText = "Hi, I'm Soupayan Ghosh"
+  const typed = useTypewriter(typewriterText, 70)
+
+  // Dynamic scroll effect for arrow
+  const { scrollY } = useViewportScroll()
+  const arrowOpacity = useTransform(scrollY, [0, 200], [1, 0])
+  const arrowScale = useTransform(scrollY, [0, 200], [1, 0.7])
 
   useEffect(() => {
     setIsMounted(true)
@@ -37,10 +63,10 @@ export function HeroSection() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-4"
           >
-            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">Hi, I'm</span>{" "}
-            <span className="relative">
-              <span className="relative z-10">Soupayan Ghosh</span>
-              <span className="absolute bottom-0 left-0 w-full h-3 bg-secondary/30 -z-10 transform -rotate-1"></span>
+            <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary">
+              {/* Typewriter effect here */}
+              {typed}
+              <span className="animate-pulse">|</span>
             </span>
           </motion.h1>
 
@@ -132,6 +158,7 @@ export function HeroSection() {
         animate={{ opacity: 1 }}
         transition={{ duration: 1, delay: 1.4 }}
         className="absolute bottom-10 left-1/2 transform -translate-x-1/2"
+        style={{ opacity: arrowOpacity, scale: arrowScale }}
       >
         <Button
           variant="ghost"

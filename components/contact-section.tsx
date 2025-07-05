@@ -1,225 +1,79 @@
 "use client"
 
-import type React from "react"
-
-import { useRef, useState } from "react"
 import { motion, useInView } from "framer-motion"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import { useRef } from "react"
 import { Card, CardContent } from "@/components/ui/card"
-import { Mail, Phone, MapPin, Send, Loader2, Github, Linkedin } from "lucide-react"
+import { Mail, Phone, MapPin, Github, Linkedin } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 export function ContactSection() {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const formData = new FormData(e.currentTarget as HTMLFormElement)
-      const data = {
-        name: formData.get('name'),
-        email: formData.get('email'),
-        subject: formData.get('subject'),
-        message: formData.get('message'),
-      }
-
-      const response = await fetch('/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to send message')
-      }
-
-      setIsSubmitted(true)
-    } catch (error) {
-      console.error('Error sending message:', error)
-      alert('Failed to send message. Please try again.')
-    } finally {
-      setIsSubmitting(false)
-    }
-  }
 
   return (
-    <section id="contact" className="py-20">
-      <div className="container mx-auto px-4">
+    <section id="contact" className="py-20 section-bg relative overflow-hidden">
+      {/* Animated gradient background */}
+      <motion.div
+        aria-hidden
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.25 }}
+        transition={{ duration: 1 }}
+        className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-tr from-primary/30 via-secondary/20 to-background/0 animate-gradient-x blur-2xl"
+      />
+      <div className="container mx-auto px-4 relative z-10">
         <motion.div
           ref={ref}
           initial={{ opacity: 0 }}
           animate={isInView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.5 }}
-          className="text-center mb-12"
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-center mb-12 section-divider"
         >
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">Get In Touch</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-4">Contact Me</h2>
           <div className="w-20 h-1 bg-primary mx-auto mb-8"></div>
           <p className="text-foreground/80 max-w-2xl mx-auto">
-            Feel free to reach out to me for any questions, opportunities, or just to say hello!
+            Feel free to reach out for collaborations, project inquiries, or just to connect!
           </p>
         </motion.div>
-
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
           <motion.div
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.5, delay: 0.2 }}
             className="lg:col-span-1 space-y-6"
+            whileHover={{ scale: 1.04, boxShadow: '0 8px 32px 0 rgba(31, 38, 135, 0.10)' }}
           >
-            <Card>
+            <motion.div
+              className="rounded-2xl backdrop-blur-md bg-white/60 dark:bg-background/60 shadow-card border border-white/30 dark:border-border/30 transition-all duration-300 group"
+              whileHover={{ y: -6 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+            >
               <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-6">Contact Information</h3>
+                <h3 className="text-xl font-bold mb-6 group-hover:text-primary transition-colors">Contact Information</h3>
                 <div className="space-y-4">
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <Mail className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Email</h4>
-                      <p className="text-foreground/80">soupayanwork@gmail.com</p>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5 text-primary" />
+                    <span>soupayanwork@gmail.com</span>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <Phone className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Phone</h4>
-                      <p className="text-foreground/80">+91-7439481012</p>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <Phone className="h-5 w-5 text-primary" />
+                    <span>+91-7439481012</span>
                   </div>
-                  <div className="flex items-start gap-4">
-                    <div className="bg-primary/10 p-3 rounded-full">
-                      <MapPin className="h-5 w-5 text-primary" />
-                    </div>
-                    <div>
-                      <h4 className="font-medium">Location</h4>
-                      <p className="text-foreground/80">Kolkata, India</p>
-                    </div>
+                  <div className="flex items-center gap-3">
+                    <MapPin className="h-5 w-5 text-primary" />
+                    <span>Kolkata, India</span>
                   </div>
                 </div>
-
-                <div className="mt-8">
-                  <h4 className="font-medium mb-4">Connect with me</h4>
-                  <div className="flex space-x-4">
-                    <a
-                      href="https://github.com/SoupayanGhosh"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-background p-3 rounded-full hover:text-primary transition-colors"
-                    >
-                      <Github className="h-5 w-5" />
-                      <span className="sr-only">GitHub</span>
-                    </a>
-                    <a
-                      href="https://www.linkedin.com/in/soupayan-ghosh-6234682a1/"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="bg-background p-3 rounded-full hover:text-primary transition-colors"
-                    >
-                      <Linkedin className="h-5 w-5" />
-                      <span className="sr-only">LinkedIn</span>
-                    </a>
-                  </div>
+                <div className="flex gap-4 mt-6">
+                  <Link href="https://github.com/SoupayanGhosh" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                    <Github className="h-5 w-5" />
+                  </Link>
+                  <Link href="https://www.linkedin.com/in/soupayan-ghosh-6234682a1/" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors">
+                    <Linkedin className="h-5 w-5" />
+                  </Link>
                 </div>
               </CardContent>
-            </Card>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
-            className="lg:col-span-2"
-          >
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-xl font-bold mb-6">Send Me a Message</h3>
-                {isSubmitted ? (
-                  <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 p-4 rounded-lg">
-                    <p className="font-medium">Thank you for your message!</p>
-                    <p className="mt-2">I'll get back to you as soon as possible.</p>
-                  </div>
-                ) : (
-                  <form onSubmit={handleSubmit} className="space-y-4">
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label htmlFor="name" className="text-sm font-medium">
-                          Name
-                        </label>
-                        <Input 
-                          id="name" 
-                          name="name"
-                          placeholder="Your Name" 
-                          required 
-                          disabled={isSubmitting} 
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <label htmlFor="email" className="text-sm font-medium">
-                          Email
-                        </label>
-                        <Input
-                          id="email"
-                          name="email"
-                          type="email"
-                          placeholder="your.email@example.com"
-                          required
-                          disabled={isSubmitting}
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="subject" className="text-sm font-medium">
-                        Subject
-                      </label>
-                      <Input 
-                        id="subject" 
-                        name="subject"
-                        placeholder="How can I help you?" 
-                        required 
-                        disabled={isSubmitting} 
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label htmlFor="message" className="text-sm font-medium">
-                        Message
-                      </label>
-                      <Textarea
-                        id="message"
-                        name="message"
-                        placeholder="Your message here..."
-                        rows={5}
-                        required
-                        disabled={isSubmitting}
-                      />
-                    </div>
-                    <Button type="submit" className="w-full gap-2" disabled={isSubmitting}>
-                      {isSubmitting ? (
-                        <>
-                          <Loader2 className="h-4 w-4 animate-spin" />
-                          Sending...
-                        </>
-                      ) : (
-                        <>
-                          <Send className="h-4 w-4" />
-                          Send Message
-                        </>
-                      )}
-                    </Button>
-                  </form>
-                )}
-              </CardContent>
-            </Card>
+            </motion.div>
           </motion.div>
         </div>
       </div>

@@ -1,6 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import clientPromise from '@/lib/mongodb'
-import { Message, MESSAGE_COLLECTION } from '@/lib/models/message'
+
+export async function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+    },
+  });
+}
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,7 +20,7 @@ export async function POST(req: NextRequest) {
     if (!name || !email || !subject || !message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
-        { status: 400 }
+        { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } }
       )
     }
 
@@ -20,35 +29,20 @@ export async function POST(req: NextRequest) {
     if (!emailRegex.test(email)) {
       return NextResponse.json(
         { error: 'Invalid email address' },
-        { status: 400 }
+        { status: 400, headers: { 'Access-Control-Allow-Origin': '*' } }
       )
     }
 
-    // Connect to MongoDB
-    const client = await clientPromise
-    const db = client.db()
-
-    // Create new message
-    const newMessage: Message = {
-      name,
-      email,
-      subject,
-      message,
-      createdAt: new Date(),
-    }
-
-    // Insert into database
-    await db.collection(MESSAGE_COLLECTION).insertOne(newMessage)
-
+    // STUB: Simulate successful message receipt (no DB)
     return NextResponse.json(
-      { success: true, message: 'Message sent successfully' }, 
-      { status: 201 }
+      { success: true, message: 'Message sent successfully (no DB)' },
+      { status: 201, headers: { 'Access-Control-Allow-Origin': '*' } }
     )
   } catch (error) {
-    console.error('Error saving message:', error)
+    console.error('Error handling message:', error)
     return NextResponse.json(
-      { error: 'Failed to save message' },
-      { status: 500 }
+      { error: 'Failed to handle message' },
+      { status: 500, headers: { 'Access-Control-Allow-Origin': '*' } }
     )
   }
 }

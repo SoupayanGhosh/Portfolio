@@ -42,10 +42,35 @@ export interface ButtonProps
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant, size, asChild = false, ...props }, ref) => {
     const Comp = asChild ? Slot : "button"
+    const buttonRef = React.useRef<HTMLButtonElement>(null)
+
+    // Ripple effect handler
+    const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+      const button = buttonRef.current
+      if (!button) return
+      const circle = document.createElement("span")
+      const diameter = Math.max(button.clientWidth, button.clientHeight)
+      const radius = diameter / 2
+      circle.style.width = circle.style.height = `${diameter}px`
+      circle.style.left = `${e.clientX - button.getBoundingClientRect().left - radius}px`
+      circle.style.top = `${e.clientY - button.getBoundingClientRect().top - radius}px`
+      circle.className = "ripple"
+      button.appendChild(circle)
+      circle.addEventListener("animationend", () => {
+        circle.remove()
+      })
+      if (typeof props.onClick === "function") props.onClick(e)
+    }
+
     return (
       <Comp
-        className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
+        className={cn(buttonVariants({ variant, size, className }), "relative overflow-hidden")}
+        ref={(node: any) => {
+          if (typeof ref === "function") ref(node)
+          else if (ref) (ref as React.MutableRefObject<any>).current = node
+          buttonRef.current = node
+        }}
+        onClick={handleClick}
         {...props}
       />
     )
